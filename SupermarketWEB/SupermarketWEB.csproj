@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\Products\" />
-    <Folder Include="Pages\PayModes\" />
   </ItemGroup>
 
 </Project>
