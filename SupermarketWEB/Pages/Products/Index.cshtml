@@ -27,7 +27,7 @@
                 <td>@item.Name</td>
                 <td>@string.Format("{0:C}", item.Price)</td> <!-- Formato de precio como moneda -->
                 <td>@item.Stock</td>
-                <td>@item.Category?.Name ?? "Sin categoría"</td> <!-- Muestra "Sin categoría" si no tiene categoria -->
+                <td>@item.Category?.Name</td>
                 <td>
                     <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
                     <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
