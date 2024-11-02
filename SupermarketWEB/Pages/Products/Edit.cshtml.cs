@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using SupermarketWEB.Data;
 using SupermarketWEB.Models;
+using static SupermarketWEB.Pages.Products.CreateModel;
 
 namespace SupermarketWEB.Pages.Products
 {
@@ -18,7 +19,7 @@ namespace SupermarketWEB.Pages.Products
         }
 
         [BindProperty]
-        public Product Product { get; set; } = default!;
+        public FormProducts ProductForm { get; set; } = new FormProducts();
 
         public List<Category> Categories { get; set; } = new List<Category>();
 
@@ -30,14 +31,25 @@ namespace SupermarketWEB.Pages.Products
                 return NotFound();
             }
 
-            Product = await _context.Products
-                                    .Include(p => p.Category)
-                                    .FirstOrDefaultAsync(m => m.Id == id);
+            // Cargar el producto desde la base de datos y mapearlo a ProductForm
+            var product = await _context.Products
+                                        .Include(p => p.Category)
+                                        .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Product == null)
+            if (product == null)
             {
                 return NotFound();
             }
+
+            // Mapear `Product` a `FormProducts`
+            ProductForm = new FormProducts
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Stock = product.Stock,
+                CategoryId = product.CategoryId
+            };
 
             Categories = await _context.Categories.ToListAsync(); // Cargar las categorías
             return Page();
@@ -52,15 +64,27 @@ namespace SupermarketWEB.Pages.Products
                 return Page();
             }
 
-            _context.Attach(Product).State = EntityState.Modified;
+            // Buscar el producto en la base de datos
+            var productToUpdate = await _context.Products.FindAsync(ProductForm.Id);
+
+            if (productToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            // Actualizar las propiedades del producto en la base de datos
+            productToUpdate.Name = ProductForm.Name;
+            productToUpdate.Price = ProductForm.Price;
+            productToUpdate.Stock = ProductForm.Stock;
+            productToUpdate.CategoryId = ProductForm.CategoryId;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // Guardar los cambios
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductExists(Product.Id))
+                if (!ProductExists(ProductForm.Id))
                 {
                     return NotFound();
                 }
