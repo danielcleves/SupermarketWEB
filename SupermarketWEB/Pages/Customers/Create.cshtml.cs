@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SupermarketWEB.Data;
@@ -5,6 +6,7 @@ using SupermarketWEB.Models;
 
 namespace SupermarketWEB.Pages.Customers
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly SupermarketContext _context;

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SupermarketWEB.Pages.Products
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly SupermarketContext _context;
